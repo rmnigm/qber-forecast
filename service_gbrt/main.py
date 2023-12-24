@@ -35,7 +35,7 @@ def main():
     parser.add_argument("--config",
                         required=False,
                         help='feature config json for model filepath')
-    parser.set_defaults(model='service/model.cbm', config='service/config.json')
+    parser.set_defaults(model='model.cbm', config='config.json')
     
     args = parser.parse_args()
     handler = ChanEstimatorHandler(args.model, args.config)

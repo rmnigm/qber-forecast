@@ -10,5 +10,6 @@ $ cd <repo>
 ```
 3. Build the docker image and run it!
 ```bash
+$ cd <service>
 $ docker compose up --build
 ```

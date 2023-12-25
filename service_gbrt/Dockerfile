@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080/tcp
 
-CMD ["python", "service/main.py"]
+CMD ["python", "main.py"]

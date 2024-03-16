@@ -7,33 +7,40 @@ import joblib
 import numpy as np
 from lightgbm import LGBMRegressor
 from sklearn.base import BaseEstimator, RegressorMixin
-from sklearn.linear_model import LinearRegression
 
 
-class CompositeModel(RegressorMixin, BaseEstimator):
-    def __init__(self):
+class EMACompositeModel(RegressorMixin, BaseEstimator):
+    def __init__(self,
+                 alpha: float = 1/3,
+                 ) -> None:
         super().__init__()
-        self.base = LinearRegression()
+        self.linear = None
+        self.alpha = alpha
         self.boost = LGBMRegressor(verbose=-1)
-    
+        
     def fit(self, X, y):
-        self.base.fit(X, y)
-        predictions = self.base.predict(X)
+        window_size = X.shape[1]
+        self.linear = np.array(
+            [self.alpha * (1 - self.alpha) ** i for i in range(window_size)]
+        )[::-1]
+        predictions = X @ self.linear
         diff = y - predictions
         self.boost.fit(X, diff)
-    
+        return self
+
     def predict(self, X):
-        return self.base.predict(X) + self.boost.predict(X)
-    
+        return X @ self.linear + self.boost.predict(X)
+
     def save(self, path_prefix: str):
         linear_filename = path_prefix + '_linear_model.joblib'
-        joblib.dump(self.base, open(linear_filename, "wb"))
+        joblib.dump(self.linear, open(linear_filename, "wb"))
         boost_filename = path_prefix + '_boost_model.joblib'
         joblib.dump(self.boost, open(boost_filename, "wb"))
-    
+
     def load(self, path_prefix: str):
         linear_filename = path_prefix + '_linear_model.joblib'
-        self.base = joblib.load(linear_filename)
+        self.linear = joblib.load(linear_filename)
+        self.alpha = self.linear[-1]
         boost_filename = path_prefix + '_boost_model.joblib'
         self.boost = joblib.load(boost_filename)
 
@@ -122,7 +129,7 @@ class Estimator:
     """
     
     def __init__(self, size=20):
-        self.model = CompositeModel()
+        self.model = EMACompositeModel()
         self.data = SlidingWindow(size=size)
     
     def load_model(self, path_prefix: str) -> None:

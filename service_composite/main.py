@@ -15,7 +15,7 @@ from generated.chan_estimator_api import ChanEstimatorService
 class ChanEstimatorHandler:
     def __init__(self, model_path_prefix: str):
         print('Creating Estimator object...')
-        self.estimator = Estimator(20)
+        self.estimator = Estimator(7)
         print('Loading model...')
         self.estimator.load_model(path_prefix=model_path_prefix)
         print('Model loaded.')

@@ -3,7 +3,7 @@ Small repository for qber forecasting microservice with catboost model.
 
 ## Currently ready
 * CatBoostRegressor estimator
-* Composite model (linear regression and LGBMRegressor)
+* Composite model (exponental smoothing and LGBMRegressor)
 
 ## Setup
 1. Install Docker

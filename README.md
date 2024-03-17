@@ -1,9 +1,10 @@
 # qber-forecast
-Small repository for qber forecasting microservice with catboost model.
+Small repository for forecasting model microservices with thrift, designed for QBER estimation experiments.
 
 ## Currently ready
 * CatBoostRegressor estimator
 * Composite model (exponental smoothing and LGBMRegressor)
+* Torch models (in progress)
 
 ## Setup
 1. Install Docker

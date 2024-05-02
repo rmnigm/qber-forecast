@@ -12,7 +12,7 @@ class Estimator:
     """
     
     def __init__(self, size=20, refit_threshold=25000):
-        self.model = CatBoostRegressor()
+        self.model = CatBoostRegressor(verbose=False)
         self.data = FakeDatabase()
         self.latest_ema = None
         self.size = size
@@ -27,7 +27,7 @@ class Estimator:
 
     def refit(self):
         sample = self.data.get_latest_rows(self.refit_threshold)
-        model = CatBoostRegressor()
+        model = CatBoostRegressor(verbose=False)
         pivoted = np.lib.stride_tricks.sliding_window_view(
             sample, self.size + 1, axis=0
         )
@@ -35,7 +35,7 @@ class Estimator:
         train = int(self.refit_threshold * 0.8)
         X_train, X_val = X[:train], X[train:]
         y_train, y_val = y[:train], y[train:]
-        model.fit(X_train, y_train, eval_set=(X_val, y_val))
+        model.fit(X_train, y_train, eval_set=(X_val, y_val), verbose=False)
         self.model = model
     
     def predict(self) -> float | None:

@@ -34,7 +34,7 @@ class FakeDatabase:
         pass
     
     def clear(self):
-        self.queue = []
+        self.queue = self.queue[-100:]
 
 
 class Database:

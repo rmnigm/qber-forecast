@@ -77,7 +77,7 @@ class CBM:
     def refit(self):
         self.is_ready = False
         self.refit_count += 1
-        print(f"Refit #{self.refit_count}")
+        print(f"Refit #{self.refit_count}", flush=True)
         self.estimator.refit()
         self.is_ready = True
 
